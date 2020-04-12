@@ -1,17 +1,12 @@
+import marker_detection
+
 import cv2
 import datetime, time
 from pathlib import Path
 
 def capture_and_save(im):
-    s = im.shape
-    # Add a timestamp
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    bottomLeftCornerOfText = (10,s[0]-10)
-    fontScale = 1
-    fontColor = (20,20,20)
-    lineType = 2
-
-    cv2.putText(im,datetime.datetime.now().isoformat().split(".")[0],bottomLeftCornerOfText,font,fontScale,fontColor, lineType)
+    # marker_detection.process_image(im)
+    cv2.rectangle(im, (0, 0), (50, 50), (0, 0, 255), thickness=5)
 
     m = 0
     p = Path("images")
