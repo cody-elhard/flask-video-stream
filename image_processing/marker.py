@@ -45,7 +45,6 @@ def process_image(img, hardcoded_image = False):
       colorG = rand.randint(0, 255)
       colorB = rand.randint(0, 255)
       if len(contour) > 200:
-
           c = contour.squeeze(1)
           min_x = np.min(c[:, 0])
           max_x = np.max(c[:, 0])

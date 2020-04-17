@@ -44,4 +44,4 @@ if __name__=="__main__":
 
   # initialize camera with background thread
   camera = Camera(args.staticfilepath)
-  app.run(host=args.host,port=args.port, extra_files="images/last.png")
+  app.run(host=args.host,port=args.port)

@@ -2,13 +2,26 @@
     <head>
         <title>Webcam</title>
         <script>
-          setTimeout(function(){
-            window.location.reload(1);
-          }, 5000);
+          window.addEventListener("load", function pageLoadStuff() {
+            setInterval(function(){
+              // Invalidate the cache every 5 seconds to trigger an image reload
+              // This is a fix as reloading the entire page would lose the picture settings (i.e. brightness)
+              document.getElementById("myImage").setAttribute('src', "/images/last?randValue=" + new Date().getTime())
+            }, 5000);
+
+            function changeBrightness(e) {
+              document.getElementById("myImage").style.filter = "brightness(" + e.target.value + "%)"
+            }
+
+            document.getElementById("brightnessRange").addEventListener("change", changeBrightness)
+          })
         </script>
     </head>
     <body>
         <h1>Last image:</h1>
-        <img src="/images/last" style="border: 3px solid black"/>
+        <img src="/images/last" style="border: 3px solid black" id="myImage"/>
+
+        <h2> Adjust brightness </h2>
+        <input type="range" min="50" max="200" value="100" class="slider" id="brightnessRange">
     </body>
 </html>
