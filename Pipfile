@@ -6,9 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-opencv-python = "*"
 Flask = "*"
 opencv-python-headless = "*"
+numpy = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.7"
