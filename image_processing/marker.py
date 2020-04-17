@@ -71,7 +71,6 @@ def process_image(img, hardcoded_image = False):
   img_points = []
 
   for i in range(0, len(bounding_box), 2):
-
       top_marker = -1
       btm_marker = -1
 
@@ -137,7 +136,7 @@ def process_image(img, hardcoded_image = False):
         x2 += points[0]
         y1 += points[1]
         y2 += points[1]
-        if 85 <= angle(line) <= 100:
+        if 85 <= angle(line) <= 95:
           #draw line the entire width of tube
           cv2.line(img, (points[0], y1), (points[2], y2), (255, 0, 0), 7)
 
