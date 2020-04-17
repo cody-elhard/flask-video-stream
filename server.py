@@ -6,10 +6,9 @@ from camera import Camera
 from capture import process_image
 import argparse
 
-# initialize camera with background thread
-camera = Camera()
-
 app = Flask(__name__)
+app.config['FLASK_APP'] ="server.py"
+app.config['FLASK_ENV'] = "development"
 
 @app.after_request
 def add_header(r):
@@ -37,9 +36,12 @@ def last_image():
     return send_from_directory("images",r)
 
 if __name__=="__main__":
-    # socketio.run(app,host="0.0.0.0",port="3005",threaded=True)
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p','--port',type=int,default=5000, help="Running port")
-    parser.add_argument("-H","--host",type=str,default='0.0.0.0', help="Address to broadcast")
-    args = parser.parse_args()
-    app.run(host=args.host,port=args.port, extra_files="images/last.png")
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-p','--port',type=int,default=5000, help="Running port")
+  parser.add_argument("-H","--host",type=str,default='0.0.0.0', help="Address to broadcast")
+  parser.add_argument("-FP","--staticfilepath",type=str,default=None, help="Set a static filepath for testing")
+  args = parser.parse_args()
+
+  # initialize camera with background thread
+  camera = Camera(args.staticfilepath)
+  app.run(host=args.host,port=args.port, extra_files="images/last.png")

@@ -5,22 +5,25 @@ import time
 from capture import capture_and_save
 
 class Camera:
-    def __init__(self, video_source=0):
-        self.video_source = video_source
-        self.camera = cv2.VideoCapture(self.video_source)
+    def __init__(self, static_file_path, video_source=0):
+      self.video_source = video_source
+      self.camera = cv2.VideoCapture(self.video_source)
+      self.static_file_path = static_file_path
 
-        # Setup background task
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True
-        thread.start()
+      # Setup background task
+      thread = threading.Thread(target=self.run, args=())
+      thread.daemon = True
+      print("start thread???")
+      thread.start()
 
     def run(self):
       while(True):
-        print("image capture init")
-        v, img = self.camera.read()
-        if v:
-          capture_and_save(img)
-          print("image captured")
+        print("read image")
+        img = cv2.imread(self.static_file_path)
+        if (img.size == 0):
+          v, img = self.camera.read()
+
+        capture_and_save(img)
 
         time.sleep(3) # Wait a second so other stuff can happen
 

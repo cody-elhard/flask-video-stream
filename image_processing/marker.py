@@ -1,16 +1,17 @@
 import cv2
 import numpy as np
 import random as rand
-from statistics import mean
 
-# NOTE: This code was taken directly from marker.py
-def process_image(img):
-  def angle(line):
-      x1, y1, x2, y2 = line[0]
-      x_diff = x1 - x2
-      y_diff = y1 - y2
-      radians = np.arctan2(x_diff, y_diff)
-      return np.abs(np.degrees(radians))
+def angle(line):
+    x1, y1, x2, y2 = line[0]
+    x_diff = x1 - x2
+    y_diff = y1 - y2
+    radians = np.arctan2(x_diff, y_diff)
+    return np.abs(np.degrees(radians))
+
+def process_image(img, hardcoded_image = False):
+  if (hardcoded_image):
+    img = cv2.imread('images/markers.jpg')
 
   #resize variables
   width = int(img.shape[1] * .5)
@@ -130,32 +131,17 @@ def process_image(img):
       #minLength is 10% of width of tube
       lines = cv2.HoughLinesP(edges, 1, np.pi/180, 15, minLineLength=(0.1*x_diff))
       for line in lines:
-          x1, y1, x2, y2 = line[0]
+        x1, y1, x2, y2 = line[0]
 
-          #transform the points on original image
-          x1 += points[0]
-          x2 += points[0]
-          y1 += points[1]
-          y2 += points[1]
-          if 85 <= angle(line) <= 100:
-              #draw line the entire width of tube
-              cv2.line(img, (points[0], y1), (points[2], y2), (255, 0, 0), 7)
+        #transform the points on original image
+        x1 += points[0]
+        x2 += points[0]
+        y1 += points[1]
+        y2 += points[1]
+        if 85 <= angle(line) <= 100:
+          #draw line the entire width of tube
+          cv2.line(img, (points[0], y1), (points[2], y2), (255, 0, 0), 7)
 
-  # #show each tube
-  # for i in range(1, len(tubes)):
-  #     cv2.imshow("Tube " + str(i), tubes[i])
-
-  # cv2.imshow('Output', cv2.resize(img, dim))
-  #cv2.imshow('Black', cv2.resize(blank_image, dim))
-  #cv2.imshow("Threshold", cv2.resize(thresh, dim))
-  #cv2.imshow('Output', np.hstack([cv2.resize(img, dim), cv2.resize(output,dim)]))
-  #cv2.imshow('Stack', np.hstack([cv2.resize(thresh, dim), cv2.resize(output, dim)]))
-  #cv2.imshow('Transform', transform)
-  #cv2.imwrite('Transform.jpg', transform)
-  #cv2.imwrite('Output.jpg', blank_image)
-  #cv2.imshow('Canny', cv2.resize(blank_canny, dim))
-
-  cv2.waitKey(0)
-  cv2.destroyAllWindows()
+  return cv2.resize(img, dim)
 
 
