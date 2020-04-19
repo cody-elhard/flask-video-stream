@@ -2,6 +2,10 @@ import cv2
 import numpy as np
 import random as rand
 
+#constants
+min_contour_size = 200
+
+
 def angle(line):
     x1, y1, x2, y2 = line[0]
     x_diff = x1 - x2
@@ -60,7 +64,7 @@ def find_area_of_interest(markers):
         # picking up the edges of the markers
         img_points.append((left_x, top_y + 1, right_x, btm_y - 1))
 
-    print(img_points)
+    #print(img_points)
     return img_points
 
 
@@ -132,7 +136,7 @@ def process_image(img, hardcoded_image = False):
     lower = np.array(yellow[0])
     upper = np.array(yellow[1])
 
-    # bitwise and with green/yellow
+    # bitwise and with yellow
     mask = cv2.inRange(img, lower, upper)
     output = cv2.bitwise_and(img, img, mask=mask)
 
