@@ -39,7 +39,6 @@ def find_area_of_interest(markers):
     img_points = []
 
     for i in range(0, len(markers), 2):
-
         top_marker = -1
         btm_marker = -1
 
@@ -109,7 +108,6 @@ def find_water_lvl(img, points):
     for line in lines:
         #only find one line that fits criteria
         if 85 <= angle(line) <= 100:
-
             x1, y1, x2, y2 = line[0]
 
             img_topY = points[1]
@@ -127,11 +125,6 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
       img = cv2.imread('images/markers.jpg')
     
     img_copy = img.copy()
-
-    # resize variables
-    width = int(img.shape[1] * .5)
-    height = int(img.shape[0] * .5)
-    dim = (width, height)
 
     # allowed variance on yellow 
     yellow = [[0, 153, 153], [102, 255, 255]]
@@ -156,17 +149,11 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
 
     areas_of_interest = find_area_of_interest(markers)
 
-    # same concept for the structure as bounding boxes
-    # [topX, topY, btmX, btmY]
-    img_points = np.array(areas_of_interest, dtype=dtype)
+    print('\nNumber of tubes detected: ' + str(len(areas_of_interest)))
 
+    water_lvl_percents = find_water_lvls(img, areas_of_interest)
 
-    # tubes = [len(img_points)]
-    print('\nNumber of tubes detected: ' + str(len(img_points)))
-
-    water_lvl_percents = find_water_lvls(img, img_points)
-
-    for index, points in enumerate(img_points):
+    for index, points in enumerate(areas_of_interest):
       (topX, topY, btmX, btmY) = points
 
       # Write the percentage over the test tube
