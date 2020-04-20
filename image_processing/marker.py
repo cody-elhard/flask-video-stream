@@ -125,6 +125,8 @@ def find_water_lvl(img, points):
 def process_image(img, hardcoded_image = False, should_return_image = False):
     if (hardcoded_image):
       img = cv2.imread('images/markers.jpg')
+    
+    img_copy = img.copy()
 
     # resize variables
     width = int(img.shape[1] * .5)
@@ -158,17 +160,31 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
     # [topX, topY, btmX, btmY]
     img_points = np.array(areas_of_interest, dtype=dtype)
 
-    for points in img_points:
-      print("point")
 
     # tubes = [len(img_points)]
     print('\nNumber of tubes detected: ' + str(len(img_points)))
 
     water_lvl_percents = find_water_lvls(img, img_points)
 
-    print(water_lvl_percents)
+    for index, points in enumerate(img_points):
+      (topX, topY, btmX, btmY) = points
+
+      # Write the percentage over the test tube
+      cv2.putText(
+        img_copy,
+        "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
+        (int(topX + btmX / 2), int(topY + btmY / 2)),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.9,
+        (0, 0, 255),
+        2,
+        cv2.LINE_AA
+      )
 
     # floats up to 4 decimal places
-    return water_lvl_percents
+    if should_return_image:
+      return img_copy
+    else:
+      return water_lvl_percents
 
 

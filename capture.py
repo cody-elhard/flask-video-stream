@@ -1,11 +1,14 @@
 import cv2
 from image_processing.marker import process_image
 
-# def process_image(img):
-#   img = process_image(img)
-#   cv2.rectangle(img, (0, 0), (50, 50), (0, 0, 255), thickness=5)
-#   return img
+def capture_and_save(img, should_return_image = False):
+  processed_image = process_image(img, hardcoded_image=True, should_return_image=True)
+  cv2.imwrite("images/last.png", resized_image(processed_image, scale=0.5))
 
-def capture_and_save(img):
-  processed_image = process_image(img, hardcoded_image=True)
-  cv2.imwrite("images/last.png", processed_image)
+def resized_image(img, scale = 1.0):
+  width = int(img.shape[1] * scale)
+  height = int(img.shape[0] * scale)
+  dim = (width, height)
+  # resize image
+  resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+  return resized
