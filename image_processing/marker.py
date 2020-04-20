@@ -3,8 +3,8 @@ import numpy as np
 import random as rand
 
 #constants
-min_contour_size = 200
-
+min_contour_size = 200 # 0 - 500?
+hsv_value = 200 # 0 - 255
 
 def angle(line):
     x1, y1, x2, y2 = line[0]
@@ -155,10 +155,10 @@ def process_image(img, hardcoded_image = False):
     areas_of_interest = find_area_of_interest(markers)
 
     # same concept for the structure as bounding boxes
+    # [topX, topY, btmX, btmY]
     img_points = np.array(areas_of_interest, dtype=dtype)
 
     # tubes = [len(img_points)]
-
     print('\nNumber of tubes detected: ' + str(len(img_points)))
 
     water_lvl_percents = find_water_lvls(img, img_points)
