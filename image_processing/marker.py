@@ -160,7 +160,10 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
       cv2.putText(
         img_copy,
         "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
-        (int(topX + btmX / 2), int(topY + btmY / 2)),
+        (
+          int(topX), # Align left
+          int((topY + btmY) / 2) # Center vertically
+        ),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.9,
         (0, 0, 255),
