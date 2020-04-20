@@ -7,5 +7,5 @@ from image_processing.marker import process_image
 #   return img
 
 def capture_and_save(img):
-  processed_image = process_image(img)
+  processed_image = process_image(img, hardcoded_image=True)
   cv2.imwrite("images/last.png", processed_image)
