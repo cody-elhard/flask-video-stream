@@ -122,9 +122,9 @@ def find_water_lvl(img, points):
 
 
 
-def process_image(img, hardcoded_image = False):
+def process_image(img, hardcoded_image = False, should_return_image = False):
     if (hardcoded_image):
-        img = cv2.imread('images/markers.jpg')
+      img = cv2.imread('images/markers.jpg')
 
     # resize variables
     width = int(img.shape[1] * .5)
@@ -157,6 +157,9 @@ def process_image(img, hardcoded_image = False):
     # same concept for the structure as bounding boxes
     # [topX, topY, btmX, btmY]
     img_points = np.array(areas_of_interest, dtype=dtype)
+
+    for points in img_points:
+      print("point")
 
     # tubes = [len(img_points)]
     print('\nNumber of tubes detected: ' + str(len(img_points)))

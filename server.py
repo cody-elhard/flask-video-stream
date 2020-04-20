@@ -5,6 +5,8 @@ from capture import capture_and_save
 from camera import Camera
 from capture import process_image
 import argparse
+import cv2
+import json
 
 app = Flask(__name__)
 app.config['FLASK_APP'] ="server.py"
@@ -25,6 +27,14 @@ def add_header(r):
 @app.route("/")
 def entrypoint():
   return render_template("index.html")
+
+@app.route("/abstract")
+def abstract():
+  arr = []
+  p = Path("images/last.png")
+  if p.exists():
+    arr = process_image(None, hardcoded_image=True, should_return_image=False)
+  return render_template("abstract.html", data=json.dumps(arr))
 
 @app.route("/images/last")
 def last_image():

@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>Webcam</title>
+  </head>
+  <body>
+    <h1> Water Levels </h1>
+
+    <canvas id="myChart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script>
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var data = {{ data | safe }}
+      console.log(data);
+
+      var labels = data.map(function(value, index) { return index })
+      
+      var chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: 'line',
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: 'Water Levels',
+                  // backgroundColor: 'rgb(255, 99, 132)',
+                  // borderColor: 'rgb(255, 99, 132)',
+                  data: data,
+                  lineTension: 0,
+              }]
+          },
+          options: {}
+      });
+    </script>
+  </body>
+</html>

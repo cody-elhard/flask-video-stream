@@ -1,10 +1,15 @@
 # This file is just used to log stuff
 import sys
 import cv2
-sys.path.append('image_processing/experimental')
-from marker_returns_array import process_image
+sys.path.append('image_processing')
+from marker import process_image
 
 image = cv2.imread("images/markers.jpg")
-process_image(image)
+water_levels = process_image(image)
 
-# actual_levels = [.5, .4, .8]
+actual_levels = [.5, .8, .4]
+
+threshold = 0.2
+
+for i, actual_level in enumerate(actual_levels):
+  assert actual_level + threshold > water_levels[i] > actual_level - threshold
