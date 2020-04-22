@@ -13,26 +13,36 @@
 
     <script>
       var ctx = document.getElementById('myChart').getContext('2d');
-      var data = {{ data | safe }}
+      var data = [new Date(), {{ data | safe }}];
       console.log(data);
 
-      var labels = data.map(function(value, index) { return index })
+      var labels = data[1].map(function(value, index) { return index })
       
       var chart = new Chart(ctx, {
           // The type of chart we want to create
-          type: 'line',
+          type: 'bar',
           data: {
               labels: labels,
               datasets: [{
                   label: 'Water Levels',
                   // backgroundColor: 'rgb(255, 99, 132)',
                   // borderColor: 'rgb(255, 99, 132)',
-                  data: data,
+                  data: data[1],
                   lineTension: 0,
               }]
           },
           options: {}
       });
+    </script>
+
+    <script>
+      var storage = [];
+      // let data = [ new Date(), {{ data }} ];
+      
+      function store(data){ // I have no idea how to actually call things but this is how you would store it in localstorage as far as I'm aware.
+        storage.push(data);
+        localStorage.setItem("storage", JSON.stringify(storage));
+      }
     </script>
   </body>
 </html>

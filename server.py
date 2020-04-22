@@ -6,7 +6,9 @@ from camera import Camera
 from capture import process_image
 import argparse
 import cv2
-import json
+import json, random
+
+from example_output import GenerateOutput
 
 app = Flask(__name__)
 app.config['FLASK_APP'] ="server.py"
@@ -27,14 +29,17 @@ def add_header(r):
 @app.route("/")
 def entrypoint():
   return render_template("index.html")
+  
 
 @app.route("/abstract")
 def abstract():
-  arr = []
-  p = Path("images/last.png")
-  if p.exists():
-    arr = process_image(None, hardcoded_image=True, should_return_image=False)
-  return render_template("abstract.html", data=json.dumps(arr))
+  data=GenerateOutput( random.randint( 10, 70 ) )
+  return render_template("abstract.html", data=data) # Temporary for fake data
+  # arr = []
+  # p = Path("images/last.png")
+  # if p.exists():
+  #   arr = process_image(None, hardcoded_image=True, should_return_image=False)
+  # return render_template("abstract.html", data=json.dumps(arr))
 
 @app.route("/images/last")
 def last_image():
@@ -48,10 +53,11 @@ def last_image():
 if __name__=="__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('-p','--port',type=int,default=5000, help="Running port")
-  parser.add_argument("-H","--host",type=str,default='0.0.0.0', help="Address to broadcast")
+  parser.add_argument("-H","--host",type=str,default='127.0.0.1', help="Address to broadcast")
   parser.add_argument("-FP","--staticfilepath",type=str,default=None, help="Set a static filepath for testing")
   args = parser.parse_args()
 
   # initialize camera with background thread
-  camera = Camera(args.staticfilepath)
+  # camera = Camera(args.staticfilepath)
   app.run(host=args.host,port=args.port)
+  
