@@ -2,3 +2,4 @@ __pycache__
 images/*
 !images/markers.jpg
 !images/not_found.jpeg
+.vscode/settings.json

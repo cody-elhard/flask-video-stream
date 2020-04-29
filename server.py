@@ -8,7 +8,7 @@ import argparse
 import cv2
 import json, random
 
-from example_output import GenerateOutput
+# from example_output import GenerateOutput
 
 app = Flask(__name__)
 app.config['FLASK_APP'] ="server.py"
@@ -36,13 +36,13 @@ def logs():
 
 @app.route("/abstract")
 def abstract():
-  data=GenerateOutput( random.randint( 10, 70 ) )
-  return render_template("abstract.html", data=data) # Temporary for fake data
-  # arr = []
-  # p = Path("images/last.png")
-  # if p.exists():
-  #   arr = process_image(None, hardcoded_image=True, should_return_image=False)
-  # return render_template("abstract.html", data=json.dumps(arr))
+  #data=GenerateOutput( random.randint( 10, 70 ) )
+  #return render_template("abstract.html", data=data) # Temporary for fake data
+  arr = []
+  p = Path("images/last.png")
+  if p.exists():
+    arr = process_image(None, hardcoded_image=True, should_return_image=False)
+  return render_template("abstract.html", data=arr)
 
 @app.route("/images/last")
 def last_image():
@@ -61,6 +61,6 @@ if __name__=="__main__":
   args = parser.parse_args()
 
   # initialize camera with background thread
-  # camera = Camera(args.staticfilepath)
+  camera = Camera(args.staticfilepath)
   app.run(host=args.host,port=args.port)
   
