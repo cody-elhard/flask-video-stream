@@ -15,7 +15,7 @@ def angle(line):
 
 
 def find_contours(img):
-    contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     bounding_box = []
 
     for contour in contours:
@@ -127,15 +127,14 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
     img_copy = img.copy()
 
     # allowed variance on yellow 
-    yellow = [[0, 153, 153], [102, 255, 255]]
-    lower = np.array(yellow[0])
-    upper = np.array(yellow[1])
+    hsv_lower = np.array([0, 0, hsv_value])
+    hsv_upper = np.array([179, 255, 255])
 
     #blur to remove noise
     blur = cv2.medianBlur(img, 13)
 
-    # bitwise and with yellow
-    mask = cv2.inRange(img, lower, upper)
+    # bitwise with yellow
+    mask = cv2.inRange(blur, hsv_lower, hsv_upper)
 
     # find contours on markers
     bounding_boxes = find_contours(mask)
