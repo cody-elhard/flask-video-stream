@@ -30,6 +30,9 @@ def add_header(r):
 def entrypoint():
   return render_template("index.html")
   
+@app.route("/logs")
+def logs():
+  return render_template("logs.html")
 
 @app.route("/abstract")
 def abstract():

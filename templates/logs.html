@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>Logs</title>
+
+        <style>
+            table, th, td { 
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding:15px; 
+                text-align: center; }
+            th { text-align: left; }
+        </style>
+    </head>
+    <body>
+        <a href="/"> Back to main page </a>
+        <p></p>
+        <table></table>
+
+        <script>
+            let data = JSON.parse(window.localStorage.getItem("storage"));
+
+            let table = document.querySelector("table");
+
+            let thead = table.createTHead();
+            let headerRow = thead.insertRow();
+
+            let dateHeader = document.createElement("th");
+            dateHeader.innerHTML = "Date";
+            dateHeader.rowSpan = 2;
+            headerRow.appendChild(dateHeader);
+
+            let tubesHeader = document.createElement("th");
+            tubesHeader.innerHTML = "Tubes";
+            tubesHeader.colSpan = "1000";
+            headerRow.appendChild(tubesHeader);
+
+            let subHeaderRow = thead.insertRow();
+
+            let maxNumTubes = 0;
+            for (let row of data ){
+                if (row[1].length > maxNumTubes){
+                    maxNumTubes = row[1].length;
+                }
+            }
+
+            for( let i = 1; i <= maxNumTubes; i++ ){
+                let tubeCounter = document.createElement("th");
+                tubeCounter.innerHTML = i;
+                subHeaderRow.appendChild(tubeCounter);
+            }
+
+            for ( let timestamp of data ){
+                let row = table.insertRow();
+                let dateCell = row.insertCell();
+                dateCell.innerHTML = timestamp[0];
+
+                for( let i = 0; i < timestamp[1].length; i++ ){
+                    let cell = row.insertCell();
+                    cell.id = "Tube " + i;
+                    cell.innerHTML = timestamp[1][i];
+                }
+            }
+        </script>
+    </body>
+</html>
