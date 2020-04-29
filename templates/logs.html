@@ -9,12 +9,23 @@
                 padding:15px; 
                 text-align: center; }
             th { text-align: left; }
+            .popup {
+                display: none;
+                position: absolute;
+                color: white;
+                padding: 10px;
+                border: solid 1px black;
+                background: green;
+                text-align: center;
+                width: 3%;
+            }
         </style>
     </head>
     <body>
         <a href="/"> Back to main page </a>
         <p></p>
         <table></table>
+        <div class="popup"></div>
 
         <script>
             let data = JSON.parse(window.localStorage.getItem("storage"));
@@ -56,7 +67,21 @@
 
                 for( let i = 0; i < timestamp[1].length; i++ ){
                     let cell = row.insertCell();
-                    cell.id = "Tube " + i;
+                    cell.id = "Tube " + ( i + 1 );
+                    cell.onmouseover = function(e){
+                        let x = e.target.offsetLeft;
+                        let y = e.target.offsetTop-17;
+                        let popup = document.querySelector(".popup");
+                        popup.innerHTML = cell.id;
+                        popup.style.display = "inline";
+                        popup.style.left = `${x}px`;
+                        popup.style.top = `${y}px`;
+                    };
+                    cell.onmouseleave = function(){
+                        let popup = document.querySelector(".popup");
+                        popup.innerHTML = "";
+                        popup.style.display = "none";
+                    }
                     cell.innerHTML = timestamp[1][i];
                 }
             }
