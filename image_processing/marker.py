@@ -3,7 +3,7 @@ import numpy as np
 import random as rand
 
 #constants
-min_contour_size = 200 # 0 - 500?
+min_contour_size = 110 # 0 - 500?
 hsv_value = 200 # 0 - 255
 
 def angle(line):
@@ -131,16 +131,14 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
     lower = np.array(yellow[0])
     upper = np.array(yellow[1])
 
+    #blur to remove noise
+    blur = cv2.medianBlur(img, 13)
+
     # bitwise and with yellow
     mask = cv2.inRange(img, lower, upper)
-    output = cv2.bitwise_and(img, img, mask=mask)
-
-    # convert to grayscale
-    gray = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
-    ret, thresh = cv2.threshold(gray, 127, 255, 0)
 
     # find contours on markers
-    bounding_boxes = find_contours(thresh)
+    bounding_boxes = find_contours(mask)
 
     # structing the array allows for easy sorting
     dtype = [('TopX', int), ('TopY', int), ('BottomX', int), ('BottomY', int)]
