@@ -38,13 +38,12 @@ def logs():
 
 @app.route("/abstract")
 def abstract():
-  arr = []
   p = Path("images/last.png")
   if p.exists():
     process_image(None, hardcoded_image=True, should_return_image=False)
     with open("data.json", "r") as infile:
       json_data = json.load(infile)
-  return render_template("abstract.html", data=json_data[len(json_data)-1][1])
+  return render_template("abstract.html", data=json_data[0][1])
 
 @app.route("/images/last")
 def last_image():
