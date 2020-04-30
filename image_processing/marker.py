@@ -5,7 +5,7 @@ import random as rand
 from example_output import GenerateOutput
 
 #constants
-min_contour_size = 200 # 0 - 500?
+min_contour_size = 110 # 0 - 500?
 hsv_value = 200 # 0 - 255
 
 def angle(line):
@@ -17,7 +17,7 @@ def angle(line):
 
 
 def find_contours(img):
-    contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     bounding_box = []
 
     for contour in contours:
@@ -148,20 +148,17 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
     img_copy = img.copy()
 
     # allowed variance on yellow 
-    yellow = [[0, 153, 153], [102, 255, 255]]
-    lower = np.array(yellow[0])
-    upper = np.array(yellow[1])
+    hsv_lower = np.array([0, 0, hsv_value])
+    hsv_upper = np.array([179, 255, 255])
 
-    # bitwise and with yellow
-    mask = cv2.inRange(img, lower, upper)
-    output = cv2.bitwise_and(img, img, mask=mask)
+    #blur to remove noise
+    blur = cv2.medianBlur(img, 13)
 
-    # convert to grayscale
-    gray = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
-    ret, thresh = cv2.threshold(gray, 127, 255, 0)
+    # bitwise with yellow
+    mask = cv2.inRange(blur, hsv_lower, hsv_upper)
 
     # find contours on markers
-    bounding_boxes = find_contours(thresh)
+    bounding_boxes = find_contours(mask)
 
     # structing the array allows for easy sorting
     dtype = [('TopX', int), ('TopY', int), ('BottomX', int), ('BottomY', int)]
