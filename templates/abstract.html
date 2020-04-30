@@ -13,11 +13,9 @@
 
     <script>
       var ctx = document.getElementById('myChart').getContext('2d');
-      var data = [new Date(), {{ data | safe }}];
-      let storage = [];
-      console.log(data);
+      var data = {{ data | safe }};
 
-      var labels = data[1].map(function(value, index) { return index })
+      var labels = data.map(function(value, index) { return index+1 })
       
       var chart = new Chart(ctx, {
           // The type of chart we want to create
@@ -28,15 +26,12 @@
                   label: 'Water Levels',
                   // backgroundColor: 'rgb(255, 99, 132)',
                   // borderColor: 'rgb(255, 99, 132)',
-                  data: data[1],
+                  data: data,
                   lineTension: 0,
               }]
           },
           options: {}
       });
-
-      storage.push(data);
-      localStorage.setItem("storage", JSON.stringify(storage));
     </script>
   </body>
 </html>

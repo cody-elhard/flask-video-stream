@@ -28,8 +28,7 @@
         <div class="popup"></div>
 
         <script>
-            let data = JSON.parse(window.localStorage.getItem("storage"));
-
+            let data = {{ data | safe }};
             let table = document.querySelector("table");
 
             let thead = table.createTHead();

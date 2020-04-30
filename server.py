@@ -4,9 +4,7 @@ from pathlib import Path
 from capture import capture_and_save
 from camera import Camera
 from capture import process_image
-import argparse
-import cv2
-import json, random
+import argparse, cv2, json, random
 
 # from example_output import GenerateOutput
 
@@ -32,17 +30,21 @@ def entrypoint():
   
 @app.route("/logs")
 def logs():
-  return render_template("logs.html")
+
+  with open( "data.json", "r" ) as infile:
+    data = json.load(infile)
+
+  return render_template("logs.html", data=data)
 
 @app.route("/abstract")
 def abstract():
-  #data=GenerateOutput( random.randint( 10, 70 ) )
-  #return render_template("abstract.html", data=data) # Temporary for fake data
   arr = []
   p = Path("images/last.png")
   if p.exists():
-    arr = process_image(None, hardcoded_image=True, should_return_image=False)
-  return render_template("abstract.html", data=arr)
+    process_image(None, hardcoded_image=True, should_return_image=False)
+    with open("data.json", "r") as infile:
+      json_data = json.load(infile)
+  return render_template("abstract.html", data=json_data[len(json_data)-1][1])
 
 @app.route("/images/last")
 def last_image():

@@ -1,6 +1,4 @@
-import cv2
-import threading
-import time
+import cv2, threading, time
 
 from capture import capture_and_save
 
@@ -13,12 +11,12 @@ class Camera:
       # Setup background task
       thread = threading.Thread(target=self.run, args=())
       thread.daemon = True
-      print("start thread???")
+      # print("start thread???")
       thread.start()
 
     def run(self):
       while(True):
-        print("read image")
+        # print("read image")
         img = cv2.imread(self.static_file_path)
         if (img.size == 0):
           v, img = self.camera.read()

@@ -1,6 +1,8 @@
-import cv2
+import cv2, json, os, datetime
 import numpy as np
 import random as rand
+
+from example_output import GenerateOutput
 
 #constants
 min_contour_size = 200 # 0 - 500?
@@ -76,6 +78,25 @@ def find_water_lvls(img, areas_of_interest):
     for points in areas_of_interest:
         percent = find_water_lvl(img, points)
         percents.append(percent)
+
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if( os.stat("data.json").st_size == 0):
+      with open("data.json", "w") as outfile:
+        # json.dump([[current_time, GenerateOutput(20)]], outfile, indent=2) # Use this for fake data
+        json.dump([[current_time, percents]], outfile, indent=2) # Use this for real data
+
+    else:
+      with open("data.json") as outfile:
+        old_data = json.load(outfile)
+      # new_data = [[current_time, GenerateOutput(20)]] # Use this for fake data
+      new_data = [[current_time, percents]] # Use this for real data
+
+      # old_data.append(new_data)  # Leaving this here because it cost me 3 hours.
+
+      old_data = old_data + new_data
+
+      with open("data.json", "w") as outfile:
+        json.dump(old_data, outfile, indent=2)
 
     return percents
 
