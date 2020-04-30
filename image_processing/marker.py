@@ -93,7 +93,7 @@ def find_water_lvls(img, areas_of_interest):
 
       # old_data.append(new_data)  # Leaving this here because it cost me 3 hours.
 
-      old_data = old_data + new_data
+      old_data = new_data + old_data
 
       with open("data.json", "w") as outfile:
         json.dump(old_data, outfile, indent=2)
