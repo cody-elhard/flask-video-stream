@@ -24,7 +24,7 @@ class Camera:
           print("loading static image")
           img = cv2.imread("images/marker-3.jpg")
         else:
-          img = cv2.imread("images/marker-3.jpg")
+          v, img = self.camera.read()
 
         capture_and_save(img)
         time.sleep(3) # Wait a second so other stuff can happen
