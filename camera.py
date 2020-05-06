@@ -21,8 +21,8 @@ class Camera:
         #if (img.size == 0):
         img = -1
         if(self.static_file_path):
-          print("loading static image")
-          img = cv2.imread("images/marker-3.jpg")
+          print("loading static image: "+str(self.static_file_path))
+          img = cv2.imread(self.static_file_path)
         else:
           v, img = self.camera.read()
 
