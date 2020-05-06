@@ -23,34 +23,36 @@ def angle(line):
 def find_water_lvls(img, areas_of_interest):
     # img_points is a 2d array of 'AREAS' of Interest
     percents = []
-
     # for each area of interest
     for points in areas_of_interest:
         try:
             percent = find_water_lvl(img, points)
             percents.append(percent)
         except:
-            print("error detecting water lvl")
-            percents.append(0)
+            print("error detecting water lvl, adding 0 to : " + str(percents))
+            percents.append(int(0))
 
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if( os.stat("data.json").st_size == 0):
-      with open("data.json", "w") as outfile:
-        # json.dump([[current_time, GenerateOutput(20)]], outfile, indent=2) # Use this for fake data
-        json.dump([[current_time, percents]], outfile, indent=2) # Use this for real data
+    try:
+      current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+      if( os.stat("data.json").st_size == 0):
+        with open("data.json", "w") as outfile:
+          # json.dump([[current_time, GenerateOutput(20)]], outfile, indent=2) # Use this for fake data
+          json.dump([[current_time, percents]], outfile, indent=2) # Use this for real data
+      else:
+        with open("data.json") as outfile:
+          old_data = json.load(outfile)
+        # new_data = [[current_time, GenerateOutput(20)]] # Use this for fake data
+        new_data = [[current_time, percents]] # Use this for real data
 
-    else:
-      with open("data.json") as outfile:
-        old_data = json.load(outfile)
-      # new_data = [[current_time, GenerateOutput(20)]] # Use this for fake data
-      new_data = [[current_time, percents]] # Use this for real data
+        # old_data.append(new_data)  # Leaving this here because it cost me 3 hours.
 
-      # old_data.append(new_data)  # Leaving this here because it cost me 3 hours.
+        old_data = new_data + old_data
 
-      old_data = new_data + old_data
-
-      with open("data.json", "w") as outfile:
-        json.dump(old_data, outfile, indent=2)
+        with open("data.json", "w") as outfile:
+          json.dump(old_data, outfile, indent=2)
+    except:
+      print("Error handling JSON")
+    
 
     return percents
 
@@ -86,7 +88,6 @@ def find_water_lvl(img, points):
         for line in lines:
             #only find one line that fits criteria
             if 85 <= angle(line) <= 100:
-
                 x1, y1, x2, y2 = line[0]
 
                 # DEBUG PURPOSE #
@@ -100,15 +101,16 @@ def find_water_lvl(img, points):
                 if percent is None:
                     return 0.0
                 return percent
+        return 0.0
     else:
+        print("No lines detected")
         return 0.0
 
 
 
-def find_areas_of_interest(markers, avg_y, display_img):
+def find_areas_of_interest(markers, avg_y):
     cropping_points = []
     for i in range(0, len(markers), 2):
-
         top_marker = -1
         btm_marker = -1
 
@@ -126,12 +128,14 @@ def find_areas_of_interest(markers, avg_y, display_img):
         right_x = max(top_marker[2] + top_marker[0], btm_marker[2] + btm_marker[0])
 
         # determine range of y
-        top_y = top_marker[1] + top_marker[3] + cushion
-        btm_y = btm_marker[1] - cushion
-
         # the plus/minus 1 can be removed, but canny is
         # picking up the edges of the markers
-        cv2.rectangle(display_img, (left_x, top_y), (right_x, btm_y), (0, 255, 255), 3)
+        top_y = top_marker[1] + top_marker[3] + cushion
+        btm_y = btm_marker[1] - cushion
+        
+        # DEBUG PURPOSE #
+        #cv2.rectangle(display_img, (left_x, top_y), (right_x, btm_y), (0, 255, 255), 3)
+
         cropping_points.append((left_x, top_y, right_x, btm_y))
 
     return cropping_points
@@ -227,31 +231,39 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
     water_lvl_percents = [0.0]
 
     try:
-        # find points to crop tubes
-        areas_of_interest = find_areas_of_interest(markers, avg_y)
-
-        # try and find water lvls
-        water_lvl_percents = find_water_lvls(img, areas_of_interest)
-        print(areas_of_interest)
-        for index, points in enumerate(areas_of_interest):
-          (topX, topY, btmX, btmY) = points
-
-          # Write the percentage over the test tube
-          cv2.putText(
-            img_copy,
-            "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
-            (
-              int(topX), # Align left
-              int((topY + btmY) / 2) # Center vertically
-            ),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.9,
-            (0, 0, 255),
-            2,
-            cv2.LINE_AA
-          )
+      # find points to crop tubes
+      areas_of_interest = find_areas_of_interest(markers, avg_y)
     except:
-        print("error detecting water levels")
+      print("Error finding areas of interest")
+
+    try:
+      # try and find water lvls
+      water_lvl_percents = find_water_lvls(img, areas_of_interest)
+      # print(water_lvl_percents)
+    except:
+      print("Error find water levels")
+
+    try:
+      #try and draw text on img
+      for index, points in enumerate(areas_of_interest):
+        (topX, topY, btmX, btmY) = points
+
+        # Write the percentage over the test tube
+        cv2.putText(
+          display_img,
+          "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
+          (
+            int(topX), # Align left
+            int((topY + btmY) / 2) # Center vertically
+          ),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.9,
+          (0, 0, 255),
+          2,
+          cv2.LINE_AA
+        )
+    except:
+        print("Error drawing text on image")
 
     # DEBUG PURPOSE #
     # cv2.imshow("Image", cv2.resize(display_img, dim))
@@ -260,7 +272,7 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
 
     # floats up to 4 decimal places
     if should_return_image:
-      return img_copy
+      return display_img
     else:
       return water_lvl_percents
 
