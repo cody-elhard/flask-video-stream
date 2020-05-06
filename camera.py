@@ -17,12 +17,16 @@ class Camera:
     def run(self):
       while(True):
         # print("read image")
-        img = cv2.imread(self.static_file_path)
-        if (img.size == 0):
-          v, img = self.camera.read()
+        #img = cv2.imread(self.static_file_path)
+        #if (img.size == 0):
+        img = -1
+        if(self.static_file_path):
+          print("loading static image")
+          img = cv2.imread("images/marker-3.jpg")
+        else:
+          img = cv2.imread("images/marker-3.jpg")
 
         capture_and_save(img)
-
         time.sleep(3) # Wait a second so other stuff can happen
 
     # Need to implement / Add button to UI
