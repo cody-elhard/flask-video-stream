@@ -235,6 +235,10 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
       areas_of_interest = find_areas_of_interest(markers, avg_y)
     except:
       print("Error finding areas of interest")
+      if should_return_image:
+          return display_img
+        else:
+          return water_lvl_percents
 
     try:
       # try and find water lvls
@@ -242,6 +246,10 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
       # print(water_lvl_percents)
     except:
       print("Error find water levels")
+      if should_return_image:
+          return display_img
+        else:
+          return water_lvl_percents
 
     try:
       #try and draw text on img
@@ -264,6 +272,11 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
         )
     except:
         print("Error drawing text on image")
+        if should_return_image:
+          return display_img
+        else:
+          return water_lvl_percents
+        
 
     # DEBUG PURPOSE #
     # cv2.imshow("Image", cv2.resize(display_img, dim))
