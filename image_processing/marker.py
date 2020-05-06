@@ -187,25 +187,26 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
     # DEBUG #
     # cv2.line(display_img, (0, avg_y), (display_img.shape[1], avg_y), (0, 255, 0), 10)
 
+    # DEBUG PURPOSE #
     # find avg distance apart
-    avg_distance_apart = 0
-    for box in filtered_contours:
-        y = 1
-        try:
-            y = box[1]
-        except:
-            print('Some error')
-        if int(y) / 2 < avg_y:
-            min_d = 100000
-            for next_box in filtered_contours:
-                if next_box != box and (next_box[1] + next_box[3] + next_box[1]) / 2 < avg_y:
-                    distance_apart = math.fabs(int((next_box[0] + next_box[2]) / 2) - int((box[0] + box[2]) / 2))
-                    if distance_apart < min_d:
-                        min_d = distance_apart
-            avg_distance_apart += min_d
+    # avg_distance_apart = 0
+    # for box in filtered_contours:
+    #     y = 1
+    #     try:
+    #         y = box[1]
+    #     except:
+    #         print('Some error')
+    #     if int(y) / 2 < avg_y:
+    #         min_d = 100000
+    #         for next_box in filtered_contours:
+    #             if next_box != box and (next_box[1] + next_box[3] + next_box[1]) / 2 < avg_y:
+    #                 distance_apart = math.fabs(int((next_box[0] + next_box[2]) / 2) - int((box[0] + box[2]) / 2))
+    #                 if distance_apart < min_d:
+    #                     min_d = distance_apart
+    #         avg_distance_apart += min_d
 
     # calc average distance apart
-    avg_distance_apart = int(avg_distance_apart / 6)
+    # avg_distance_apart = int(avg_distance_apart / 6)
 
     # build np array for sorting
     dtype = [('TopX', int), ('TopY', int), ('BottomX', int), ('BottomY', int)]
@@ -233,22 +234,22 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
         water_lvl_percents = find_water_lvls(img, areas_of_interest)
         print(areas_of_interest)
         for index, points in enumerate(areas_of_interest):
-        (topX, topY, btmX, btmY) = points
+          (topX, topY, btmX, btmY) = points
 
-        # Write the percentage over the test tube
-        cv2.putText(
-          img_copy,
-          "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
-          (
-            int(topX), # Align left
-            int((topY + btmY) / 2) # Center vertically
-          ),
-          cv2.FONT_HERSHEY_SIMPLEX,
-          0.9,
-          (0, 0, 255),
-          2,
-          cv2.LINE_AA
-        )
+          # Write the percentage over the test tube
+          cv2.putText(
+            img_copy,
+            "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
+            (
+              int(topX), # Align left
+              int((topY + btmY) / 2) # Center vertically
+            ),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.9,
+            (0, 0, 255),
+            2,
+            cv2.LINE_AA
+          )
     except:
         print("error detecting water levels")
 
