@@ -10,6 +10,7 @@ hsv_value = 200 # 0 - 255
 scale = 2
 cushion = 7
 k_blur = 25
+edge_blur = 1
 
 
 def angle(line):
@@ -80,7 +81,7 @@ def find_water_lvl(img, points):
 
     # get edges on the tube (cropped image)
     # might need gray scale/median filter?
-    tube_blur = cv2.medianBlur(tube, 7)
+    tube_blur = cv2.medianBlur(tube, edge_blur)
     edges = cv2.Canny(tube_blur, 50, 150)
     lines = cv2.HoughLinesP(edges, 1, np.pi / 180, 15, minLineLength=(0.1 * x_diff))
 
@@ -262,7 +263,7 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
           "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
           (
             int(topX), # Align left
-            int((topY + btmY) / 2) # Center vertically
+            int(topY + ((1-water_lvl_percents[index])*(topY + btmY))) # Put text on water line
           ),
           cv2.FONT_HERSHEY_SIMPLEX,
           0.9,
