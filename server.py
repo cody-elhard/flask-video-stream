@@ -26,7 +26,13 @@ def add_header(r):
 
 @app.route("/")
 def entrypoint():
-  return render_template("index.html")
+  json_data = [None, []]
+  p = Path("images/last.png")
+  if p.exists():
+    process_image(None, hardcoded_image=True, should_return_image=False)
+    with open("data.json", "r") as infile:
+      json_data = json.load(infile)
+  return render_template("index.html", data=json_data[0][1])
   
 @app.route("/logs")
 def logs():
@@ -35,15 +41,6 @@ def logs():
     data = json.load(infile)
 
   return render_template("logs.html", data=data)
-
-@app.route("/abstract")
-def abstract():
-  p = Path("images/last.png")
-  if p.exists():
-    process_image(None, hardcoded_image=True, should_return_image=False)
-    with open("data.json", "r") as infile:
-      json_data = json.load(infile)
-  return render_template("abstract.html", data=json_data[0][1])
 
 @app.route("/images/last")
 def last_image():

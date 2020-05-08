@@ -1,6 +1,10 @@
 <html>
     <head>
-        <title>Webcam</title>
+        <title>Water Levels</title>
+        <script src="https://www.amcharts.com/lib/4/core.js"></script>
+        <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+        <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
         <script>
           window.addEventListener("load", function pageLoadStuff() {
             setInterval(function(){
@@ -13,19 +17,234 @@
               document.getElementById("myImage").style.filter = "brightness(" + e.target.value + "%)"
             }
 
-            document.getElementById("brightnessRange").addEventListener("change", changeBrightness)
-          })
-        </script>
-    </head>
-    <body>
-        <h1>Last image:</h1>
-        <img src="/images/last" style="border: 3px solid black" id="myImage"/>
+            document.getElementById("brightnessRange").addEventListener("change", changeBrightness);
 
-        <h2> Adjust brightness </h2>
-        <input type="range" min="50" max="200" value="100" class="slider" id="brightnessRange">
-        <p></p>
-        <a href="/abstract"> Abstract View </a>
-        <p></p>
-        <a href="/logs"> Logs </a>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var data = {{ data | safe }};
+
+            var labels = data.map(function(value, index) { return index+1 })
+            
+            var chart = new Chart(
+              ctx,
+              {
+                // The type of chart we want to create
+                type: 'bar',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                      label: 'Water Levels',
+                      // backgroundColor: 'rgb(255, 99, 132)',
+                      // borderColor: 'rgb(255, 99, 132)',
+                      data: data,
+                      lineTension: 0,
+                  }]
+                },
+                options: {}
+              }
+            );
+          });
+
+          function switchViews() {
+              if (imageDisplay.style.display === "none") {
+                imageDisplay.style.display = "block";
+                chartDisplay.style.display = "none";
+                document.getElementById("switchTitle").innerHTML = "Change to graph view";
+              } else {
+                chartDisplay.style.display = "block";
+                imageDisplay.style.display = "none";
+                document.getElementById("switchTitle").innerHTML = "Change to image view";
+              }
+            }
+        </script>
+        <style>
+          body {
+              margin: 0;
+              font-family: Arial, Helvetica, sans-serif;
+          }
+          
+          .topnav {
+              overflow: hidden;
+              background-color: #35469C;
+          }
+          
+          .topnav a {
+              float: right;
+              color: #f2f2f2;
+              text-align: center;
+              padding: 14px 16px;
+              text-decoration: none;
+              font-size: 17px;
+          }
+          
+          .topnav a:hover {
+              background-color: #ddd;
+              color: black;
+          }
+          
+          .topnav a.active {
+              background-color: #98AEEB;
+              color: white;
+          }
+
+          .FloodingClear{
+              color: white;
+              padding: 8px;
+              font-size: 16px;
+              border: 1px solid rgb(0, 37, 0);
+              background-color: green;
+              display: block;
+              position: fixed;
+              bottom: 0;
+              width: 100%;
+              font-family: Arial, Helvetica, sans-serif;
+              width: 100%;
+              text-align: center;
+          }
+
+          .FloodingDanger{
+              color: white;
+              padding: 8px;
+              font-size: 16px;
+              border: 1px solid rgb(97, 0, 0);
+              background-color: red;
+              display: none;
+              position: fixed;
+              bottom: 0;
+              width: 100%;
+              font-family: Arial, Helvetica, sans-serif;
+              width: 100%;
+              text-align: center;
+          }
+
+          #waterLevelTitle {
+              text-align: center;
+              position: static;
+              font-family: Arial, Helvetica, sans-serif;
+              margin-top: 8px;
+              margin-bottom: 8px;
+          }
+
+          .switch {
+              float: right;
+              position: relative;
+              width: 60px;
+              height: 34px;
+              object-position: top;
+              margin-right: 16px;
+          }
+
+          /* Hide default HTML checkbox */
+          .switch input {
+              opacity: 0;
+              width: 0;
+              height: 0;
+          }
+
+          /* The slider */
+          .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: rgb(168, 178, 235);
+              -webkit-transition: .4s;
+              transition: .4s;
+          }
+
+          .slider:before {
+              position: absolute;
+              content: "";
+              height: 26px;
+              width: 26px;
+              left: 4px;
+              bottom: 4px;
+              background-color: white;
+              -webkit-transition: .4s;
+              transition: .4s;
+          }
+
+          input:checked + .slider {
+              background-color: #2196F3;
+          }
+
+          input:focus + .slider {
+              box-shadow: 0 0 1px #2196F3;
+          }
+
+          input:checked + .slider:before {
+              -webkit-transform: translateX(26px);
+              -ms-transform: translateX(26px);
+              transform: translateX(26px);
+          }
+
+          /* Rounded sliders */
+          .slider.round {
+              border-radius: 34px;
+          }
+
+          .slider.round:before {
+              border-radius: 50%;
+          }
+
+          #myImage {
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              margin-top: 100px;
+              width: 50%;
+          }
+
+          #adjustBrightnessText {
+              text-align: center;
+              font-family: Arial, Helvetica, sans-serif;
+              margin-top: 24px;
+              margin-bottom: 8px;
+          }
+
+          .brightnessSlider {
+            text-align: center;
+          }
+
+          #switchTitle {
+            font-size: 14px;
+            margin-right: 16px;
+          }
+
+          .descriptionLabels {
+            margin-bottom: 48px;
+          }
+
+          #chartDisplay {
+            margin-bottom: auto;
+          }
+      </style>
+    </head>
+    <body style="background-color:#BCCCDC;">
+        <div class="topnav">
+          <a href="/logs">Data Log</a>
+          <a class="active" href="/">Water Levels</a>
+        </div>
+        <div class="descriptionLabels">
+          <h1 id="waterLevelTitle">Water Levels</h1>
+          <h1 id="switchTitle" style="float: right;">Change to image view</h1>
+        </div>
+        <label class="switch" onchange="switchViews()">
+          <input type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <div id="chartDisplay">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div id="imageDisplay" style="display: none;">
+          <img src="/images/last" style="border: 3px solid black" id="myImage"/>
+          <h2 id="adjustBrightnessText">Adjust brightness</h2>
+          <div class="brightnessSlider">
+            <input type="range" class="slider" id="brightnessRange">
+          </div>
+        </div>
+        <div class="FloodingClear">Flooding Clear</div>
+        <div class="FloodingDanger">Flooding Danger</div>
     </body>
 </html>
