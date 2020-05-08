@@ -263,7 +263,7 @@ def process_image(img, hardcoded_image = False, should_return_image = False):
           "{}%".format(str(round(water_lvl_percents[index] * 100, 2))),
           (
             int(topX), # Align left
-            int(topY + ((1-water_lvl_percents[index])*(topY + btmY))) # Put text on water line
+            int(topY + ((1-water_lvl_percents[index])*((topY + btmY) * .5))) # Put text on water line
           ),
           cv2.FONT_HERSHEY_SIMPLEX,
           0.9,
