@@ -1,28 +1,76 @@
 <html>
     <head>
-        <title>Logs</title>
+        <title>Data Log</title>
 
         <style>
             table, th, td { 
                 border: 1px solid black;
                 border-collapse: collapse;
+                font-family: Arial, Helvetica, sans-serif;
+                margin-left: 16px;
                 padding:15px; 
                 text-align: center; }
             th { text-align: left; }
+
+            tr:nth-child(even) {
+                background-color: #4C63B6;
+            }
+
             .popup {
                 display: none;
                 position: absolute;
                 color: white;
+                margin-left: 16px;
                 padding: 10px;
                 border: solid 1px black;
-                background: green;
+                background: rgb(145, 161, 218);
                 text-align: center;
                 width: 3%;
             }
+
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        
+            .topnav {
+                overflow: hidden;
+                background-color: #35469C;
+            }
+        
+            .topnav a {
+                float: right;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+        
+            .topnav a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+        
+            .topnav a.active {
+                background-color: #98AEEB;
+                color: white;
+            }
+
+            #dataLogTitle {
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                margin-top: 8px;
+                margin-bottom: 8px;
+            }
         </style>
     </head>
-    <body>
-        <a href="/"> Back to main page </a>
+    <body style="background-color:#BCCCDC;">
+        <div class="topnav">
+            <a class="active" href="/logs">Data Log</a>
+            <a href="/">Water Levels</a>
+        </div>
+        <h1 id="dataLogTitle">Data Log</h1>
         <p></p>
         <table></table>
         <div class="popup"></div>
